@@ -1,0 +1,6 @@
+{
+  "name": "Tea Spirit Interactive Kiosk",
+  "description": "茶席感官互動裝置體驗遊戲：製茶流程探索、六感情緒選擇與專屬茶靈小怪獸列印體驗。",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
