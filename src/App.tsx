@@ -35,9 +35,6 @@ import { Radio, AlertTriangle, X } from './components/icons';
 
 type Stage = 'home' | 'select' | 'process' | 'steam' | 'emotion' | 'reveal' | 'printer';
 
-// 網址後面加 ?admin 才能叫出後台選單；平常一進來就是純展示，右鍵、長按都不會跳出任何選單
-const IS_ADMIN = new URLSearchParams(window.location.search).has('admin');
-
 export default function App() {
   const [selectedTea, setSelectedTea] = useState<TeaProduct>(TEAS[0]);
   const [currentStage, setCurrentStage] = useState<Stage>('home');
@@ -107,13 +104,6 @@ export default function App() {
       }
     });
   }, [isHome]);
-
-  useEffect(() => {
-    if (IS_ADMIN) return;
-    const block = (e: Event) => e.preventDefault();
-    document.addEventListener('contextmenu', block);
-    return () => document.removeEventListener('contextmenu', block);
-  }, []);
 
   // Sync assets and settings to backend
   const handleUpdateAssets = (newAssets: MediaAsset[], deletedUrl?: string) => {
@@ -383,7 +373,7 @@ export default function App() {
       />
 
       {/* Right-click Control Menu (Hidden from screen surface, activated via right-click or touchscreen long-press) */}
-      {IS_ADMIN && <HamburgerMenu
+      <HamburgerMenu
         onOpenGallery={(tab) => {
           setGalleryInitialTab(tab || 'slots');
           setIsGalleryOpen(true);
@@ -396,7 +386,7 @@ export default function App() {
         onUploadProcessChart={() => processChartInputRef.current?.click()}
         onSkipProcess={handleProcessComplete}
         currentStage={currentStage}
-      />}
+      />
 
       {/* Main Exhibition Interactive Canvas - Scaled properly for Fullscreen and Windowed mode */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 py-4 sm:px-6 sm:py-5 lg:px-8 lg:py-6 flex flex-col justify-center space-y-4">

@@ -50,8 +50,14 @@ export const HamburgerMenu: React.FC<Props> = ({
     }
   };
 
-  // Right-click global event listener to open menu at cursor location
+  // 叫出設定：滑鼠右鍵按一下，或手指長按 3 秒（觀眾隨手碰一下、按一下不會跳出來）
   useEffect(() => {
+    const LONG_PRESS_MS = 3000;
+    const MOVE_TOLERANCE_PX = 15; // 手指在長按時稍微晃動不算移開
+    let touching = false;
+    let startX = 0;
+    let startY = 0;
+
     const handleContextMenu = (e: MouseEvent) => {
       // Ignore if user right-clicks inside an input or textarea
       const target = e.target as HTMLElement;
@@ -59,6 +65,8 @@ export const HamburgerMenu: React.FC<Props> = ({
         return;
       }
       e.preventDefault();
+      // 手指長按時瀏覽器約 0.5 秒就會送出「右鍵」，這時不開，交給下面的 3 秒計時
+      if (touching) return;
       const menuWidth = 260;
       const menuHeight = 440;
       const x = Math.min(e.clientX, window.innerWidth - menuWidth - 16);
@@ -71,6 +79,9 @@ export const HamburgerMenu: React.FC<Props> = ({
     const handleTouchStart = (e: TouchEvent) => {
       if (e.touches.length === 1) {
         const touch = e.touches[0];
+        touching = true;
+        startX = touch.clientX;
+        startY = touch.clientY;
         touchTimerRef.current = window.setTimeout(() => {
           const menuWidth = 260;
           const menuHeight = 440;
@@ -78,15 +89,21 @@ export const HamburgerMenu: React.FC<Props> = ({
           const y = Math.min(touch.clientY, window.innerHeight - menuHeight - 16);
           setPosition({ x: Math.max(16, x), y: Math.max(16, y) });
           setIsOpen(true);
-        }, 700);
+        }, LONG_PRESS_MS);
       }
     };
 
     const handleTouchEnd = () => {
+      touching = false;
       if (touchTimerRef.current) {
         clearTimeout(touchTimerRef.current);
         touchTimerRef.current = null;
       }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      const t = e.touches[0];
+      if (t && Math.hypot(t.clientX - startX, t.clientY - startY) > MOVE_TOLERANCE_PX) handleTouchEnd();
     };
 
     // Keyboard shortcut (Escape to close, or 'm' key for admin convenience)
@@ -99,14 +116,16 @@ export const HamburgerMenu: React.FC<Props> = ({
     window.addEventListener('contextmenu', handleContextMenu);
     window.addEventListener('touchstart', handleTouchStart, { passive: true });
     window.addEventListener('touchend', handleTouchEnd);
-    window.addEventListener('touchmove', handleTouchEnd);
+    window.addEventListener('touchcancel', handleTouchEnd);
+    window.addEventListener('touchmove', handleTouchMove, { passive: true });
     window.addEventListener('keydown', handleKeyDown);
 
     return () => {
       window.removeEventListener('contextmenu', handleContextMenu);
       window.removeEventListener('touchstart', handleTouchStart);
       window.removeEventListener('touchend', handleTouchEnd);
-      window.removeEventListener('touchmove', handleTouchEnd);
+      window.removeEventListener('touchcancel', handleTouchEnd);
+      window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('keydown', handleKeyDown);
       if (touchTimerRef.current) clearTimeout(touchTimerRef.current);
     };
@@ -133,7 +152,7 @@ export const HamburgerMenu: React.FC<Props> = ({
       >
         {/* Header with Title and Close button */}
         <div className="px-2.5 py-1.5 border-b border-stone-100 flex items-center justify-between text-[11px] font-mono text-stone-500 mb-1">
-          <span className="font-semibold text-stone-700">後台控制選單 · 右鍵喚醒</span>
+          <span className="font-semibold text-stone-700">後台控制選單 · 右鍵／長按 3 秒</span>
           <button 
             onClick={() => setIsOpen(false)}
             className="w-5 h-5 rounded-md hover:bg-stone-100 text-stone-400 hover:text-stone-700 flex items-center justify-center cursor-pointer transition-colors"
