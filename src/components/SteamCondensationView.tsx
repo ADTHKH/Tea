@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { TeaProduct } from '../types/tea';
 import { sounds } from '../utils/audio';
-import { Sparkles } from 'lucide-react';
+import { Sparkles } from './icons';
 
 interface Props {
   tea: TeaProduct;

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Sparkles, ArrowRight } from 'lucide-react';
+import { Sparkles, ArrowRight } from './icons';
 import { sounds } from '../utils/audio';
 import { SlotMedia } from './SlotMedia';
 

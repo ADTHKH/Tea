@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { TeaProduct, EmotionOption, TeaMonster } from '../types/tea';
 import { TeaMonsterAvatar } from './TeaMonsterAvatar';
-import { Printer, RotateCcw, CheckCircle2, Send } from 'lucide-react';
+import { Printer, RotateCcw, CheckCircle2, Send } from './icons';
 import { sounds } from '../utils/audio';
 import { DEFAULT_EMOTION_IMAGES, DEFAULT_TEXTS } from '../utils/mediaStorage';
 import { printImage } from '../utils/receiptPrinter';

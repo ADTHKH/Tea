@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { TeaProduct } from '../types/tea';
 import { SlotMedia } from './SlotMedia';
-import { Compass, Droplets, Flame, Sparkles, Check } from 'lucide-react';
+import { Compass, Droplets, Flame, Sparkles, Check } from './icons';
 
 interface Props {
   tea: TeaProduct;

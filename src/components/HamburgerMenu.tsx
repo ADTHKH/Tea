@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   X, Image as ImageIcon, Volume2, VolumeX, 
   FastForward, RotateCcw, Maximize, Minimize, Type, Sparkles, Home, Radio, Upload, Printer
-} from 'lucide-react';
+} from './icons';
 import { sounds } from '../utils/audio';
 import { pairPrinter } from '../utils/receiptPrinter';
 

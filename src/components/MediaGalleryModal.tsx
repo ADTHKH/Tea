@@ -7,7 +7,7 @@ import { SlotMedia } from './SlotMedia';
 import { 
   Upload, Image as ImageIcon, Trash2, Check, RefreshCw, X, Sliders, Layers, 
   Eye, CheckCircle2, AlertCircle, FilePlus, Type, RotateCcw, Lock, Radio
-} from 'lucide-react';
+} from './icons';
 
 interface Props {
   isOpen: boolean;

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { TEAS } from '../data/teaData';
 import { TeaProduct } from '../types/tea';
-import { Radio, Cpu, Sparkles, ArrowLeft, CheckCircle2, Search } from 'lucide-react';
+import { Radio, Cpu, Sparkles, ArrowLeft, CheckCircle2, Search } from './icons';
 import { sounds } from '../utils/audio';
 import { matchNfcToTea } from '../utils/nfcMatcher';
 
