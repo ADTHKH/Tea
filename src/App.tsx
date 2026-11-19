@@ -8,10 +8,8 @@ import { TEAS, EMOTIONS } from './data/teaData';
 import { TeaProduct, EmotionOption, TeaMonster } from './types/tea';
 import { MediaAsset, CustomThemeSettings } from './types/media';
 import { 
-  getSavedAssets, 
   saveAssets, 
   fetchAssetsFromServer,
-  getSavedSettings, 
   saveSettings, 
   saveImageToServer,
   DEFAULT_ASSETS, 
@@ -51,8 +49,8 @@ export default function App() {
   } | null>(null);
 
   // Media assets and custom settings
-  const [assets, setAssets] = useState<MediaAsset[]>(() => getSavedAssets());
-  const [settings, setSettings] = useState<CustomThemeSettings>(() => getSavedSettings());
+  const [assets, setAssets] = useState<MediaAsset[]>(DEFAULT_ASSETS);
+  const [settings, setSettings] = useState<CustomThemeSettings>(DEFAULT_SETTINGS);
   const [isGalleryOpen, setIsGalleryOpen] = useState<boolean>(false);
   const [isNfcModalOpen, setIsNfcModalOpen] = useState<boolean>(false);
   const [galleryInitialTab, setGalleryInitialTab] = useState<'slots' | 'upload' | 'settings' | 'text'>('slots');
@@ -90,31 +88,22 @@ export default function App() {
               customTexts: nextTexts,
               emotionNfcChips: nextEmotionChips
             };
-            try {
-              localStorage.setItem('tea_kiosk_theme_settings_v2', JSON.stringify(nextSettings));
-            } catch (e) {}
             return nextSettings;
           });
         }
       })
       .catch(() => {
-        // Fallback to frozen defaults / localStorage if API is not running
+        // Fallback to frozen defaults if API is not running
       });
 
     fetchAssetsFromServer().then((serverAssets) => {
       if (Array.isArray(serverAssets)) {
         setAssets(serverAssets);
-        try {
-          const lightweight = serverAssets.filter(
-            (a) => a && typeof a.url === 'string' && (!a.url.startsWith('data:') || a.url.length < 200000)
-          );
-          localStorage.setItem('tea_kiosk_media_assets_v2', JSON.stringify(lightweight));
-        } catch (e) {}
       }
     });
   }, []);
 
-  // Sync assets and settings to localStorage and backend
+  // Sync assets and settings to backend
   const handleUpdateAssets = (newAssets: MediaAsset[], deletedUrl?: string) => {
     setAssets(newAssets);
     saveAssets(newAssets, deletedUrl);

@@ -16,8 +16,8 @@ app.use(express.urlencoded({ extended: true, limit: '100mb' }));
 const IMAGES_DIR = path.resolve(__dirname, 'images');
 const PUBLIC_IMAGES_DIR = path.resolve(__dirname, 'public/images');
 const DATA_DIR = path.resolve(__dirname, 'data');
-const SETTINGS_FILE = path.join(DATA_DIR, 'customSettings.json');
-const ASSETS_FILE = path.join(DATA_DIR, 'customAssets.json');
+const SETTINGS_PATH = 'data/customSettings.json';
+const ASSETS_PATH = 'data/customAssets.json';
 
 // Ensure directories exist
 [IMAGES_DIR, PUBLIC_IMAGES_DIR, DATA_DIR].forEach((dir) => {
@@ -26,7 +26,7 @@ const ASSETS_FILE = path.join(DATA_DIR, 'customAssets.json');
   }
 });
 
-const IMAGE_EXTS = new Set(['.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg']);
+const IMAGE_EXTS = new Set(['.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg', '.mp4']);
 
 interface StoredAsset {
   id: string;
@@ -43,23 +43,94 @@ interface AssetsStoreData {
   deletedUrls: string[];
 }
 
-function readAssetsStore(): AssetsStoreData {
-  if (fs.existsSync(ASSETS_FILE)) {
-    try {
-      const parsed = JSON.parse(fs.readFileSync(ASSETS_FILE, 'utf-8'));
-      return {
-        assets: Array.isArray(parsed?.assets) ? parsed.assets : [],
-        deletedUrls: Array.isArray(parsed?.deletedUrls) ? parsed.deletedUrls : []
-      };
-    } catch {
-      return { assets: [], deletedUrls: [] };
-    }
+/**
+ * 長期存檔：發布後的主機重啟就會清空，所以有設定 GITHUB_TOKEN 時，
+ * 設定、素材清單、上傳的圖都直接寫回 GitHub 專案；沒設定時才寫本機（只適合本機開發）。
+ */
+const GH_TOKEN = process.env.GITHUB_TOKEN || '';
+const GH_REPO = process.env.GITHUB_REPO || 'ADTHKH/Tea';
+const GH_BRANCH = process.env.GITHUB_BRANCH || 'main';
+
+const ghUrl = (repoPath: string) =>
+  `https://api.github.com/repos/${GH_REPO}/contents/${repoPath.split('/').map(encodeURIComponent).join('/')}`;
+const ghHeaders = (accept = 'application/vnd.github+json') => ({
+  Authorization: `Bearer ${GH_TOKEN}`,
+  Accept: accept,
+  'X-GitHub-Api-Version': '2022-11-28'
+});
+
+async function readStored(repoPath: string): Promise<Buffer | null> {
+  if (!GH_TOKEN) {
+    const p = path.join(__dirname, repoPath);
+    return fs.existsSync(p) ? fs.readFileSync(p) : null;
   }
-  return { assets: [], deletedUrls: [] };
+  const res = await fetch(`${ghUrl(repoPath)}?ref=${GH_BRANCH}`, { headers: ghHeaders('application/vnd.github.raw') });
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error(`GitHub 讀取 ${repoPath} 失敗：${res.status}`);
+  return Buffer.from(await res.arrayBuffer());
 }
 
-function writeAssetsStore(data: AssetsStoreData) {
-  fs.writeFileSync(ASSETS_FILE, JSON.stringify(data, null, 2), 'utf-8');
+async function ghSha(repoPath: string): Promise<string | undefined> {
+  const res = await fetch(`${ghUrl(repoPath)}?ref=${GH_BRANCH}`, { headers: ghHeaders() });
+  return res.ok ? (await res.json()).sha : undefined;
+}
+
+async function writeStored(repoPath: string, content: Buffer, message: string): Promise<void> {
+  if (!GH_TOKEN) {
+    fs.writeFileSync(path.join(__dirname, repoPath), content);
+    return;
+  }
+  // 別人剛好同時寫入會拿到舊版本號（409），重拿一次再寫
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const res = await fetch(ghUrl(repoPath), {
+      method: 'PUT',
+      headers: ghHeaders(),
+      body: JSON.stringify({ message, content: content.toString('base64'), branch: GH_BRANCH, sha: await ghSha(repoPath) })
+    });
+    if (res.ok) return;
+    if (res.status !== 409 || attempt > 0) throw new Error(`GitHub 寫入 ${repoPath} 失敗：${res.status} ${await res.text()}`);
+  }
+}
+
+// 設定檔先放記憶體，停止變動 2 秒後才寫出一次，避免拖滑桿時每秒寫幾十次
+const jsonCache = new Map<string, any>();
+const flushTimers = new Map<string, NodeJS.Timeout>();
+
+async function readJson(repoPath: string): Promise<any> {
+  if (!jsonCache.has(repoPath)) {
+    const buf = await readStored(repoPath);
+    let parsed = null;
+    try {
+      parsed = buf ? JSON.parse(buf.toString('utf-8')) : null;
+    } catch {}
+    jsonCache.set(repoPath, parsed);
+  }
+  return jsonCache.get(repoPath);
+}
+
+function writeJson(repoPath: string, data: any) {
+  jsonCache.set(repoPath, data);
+  clearTimeout(flushTimers.get(repoPath));
+  flushTimers.set(
+    repoPath,
+    setTimeout(() => {
+      writeStored(repoPath, Buffer.from(JSON.stringify(data, null, 2), 'utf-8'), `後台更新 ${repoPath}`).catch((err) =>
+        console.error('[Storage] 存檔失敗:', err)
+      );
+    }, 2000)
+  );
+}
+
+// 後台新上傳、還沒重新發布的圖，從 GitHub 拿一次後留在記憶體
+const uploadedImages = new Map<string, Buffer>();
+
+async function imageUrlExists(url: string): Promise<boolean> {
+  if (!url.startsWith('/images/')) return true;
+  const rel = url.replace(/^\/images\//, '');
+  if (!rel || rel.includes('..') || rel.includes('/')) return false;
+  if (fs.existsSync(path.join(IMAGES_DIR, rel)) || fs.existsSync(path.join(PUBLIC_IMAGES_DIR, rel))) return true;
+  if (uploadedImages.has(rel)) return true;
+  return GH_TOKEN ? Boolean(await ghSha(`images/${rel}`)) : false;
 }
 
 function inferTargetKeyFromFilename(filename: string): { category: string; targetKey: string } {
@@ -130,9 +201,13 @@ function inferTargetKeyFromFilename(filename: string): { category: string; targe
  * Initialize customAssets.json from IMAGES_DIR ONLY if customAssets.json does not exist yet.
  * Never automatically mutates, copies, or restores files inside images/!
  */
-function getFrozenAssetsStore(): AssetsStoreData {
-  if (fs.existsSync(ASSETS_FILE)) {
-    return readAssetsStore();
+async function getFrozenAssetsStore(): Promise<AssetsStoreData> {
+  const saved = await readJson(ASSETS_PATH);
+  if (saved) {
+    return {
+      assets: Array.isArray(saved.assets) ? saved.assets : [],
+      deletedUrls: Array.isArray(saved.deletedUrls) ? saved.deletedUrls : []
+    };
   }
 
   const filesInImages = fs.existsSync(IMAGES_DIR) ? fs.readdirSync(IMAGES_DIR) : [];
@@ -154,16 +229,31 @@ function getFrozenAssetsStore(): AssetsStoreData {
   }
 
   const store: AssetsStoreData = { assets, deletedUrls: [] };
-  writeAssetsStore(store);
+  writeJson(ASSETS_PATH, store);
   return store;
 }
 
 // Serve /images directly from IMAGES_DIR first (user's authoritative images folder), then PUBLIC_IMAGES_DIR
 app.use('/images', express.static(IMAGES_DIR));
 app.use('/images', express.static(PUBLIC_IMAGES_DIR));
+app.get('/images/:name', async (req, res, next) => {
+  const name = req.params.name;
+  if (!GH_TOKEN || name.includes('/') || name.includes('..')) return next();
+  try {
+    let buf = uploadedImages.get(name);
+    if (!buf) {
+      buf = (await readStored(`images/${name}`)) || undefined;
+      if (!buf) return next();
+      uploadedImages.set(name, buf);
+    }
+    res.type(path.extname(name)).send(buf);
+  } catch (err) {
+    next(err);
+  }
+});
 
 // API 1: Save image file into images/ and public/images/ folders AND persist to storage library + optional slot binding
-app.post('/api/save-image', (req, res) => {
+app.post('/api/save-image', async (req, res) => {
   try {
     const { filename, dataUrl, targetKey, bindToSlot } = req.body;
 
@@ -201,12 +291,13 @@ app.post('/api/save-image', (req, res) => {
 
     const buffer = Buffer.from(base64Data, 'base64');
 
-    // Write to both ./images/ and ./public/images/
-    const targetPathImages = path.join(IMAGES_DIR, cleanName);
-    const targetPathPublic = path.join(PUBLIC_IMAGES_DIR, cleanName);
-
-    fs.writeFileSync(targetPathImages, buffer);
-    fs.writeFileSync(targetPathPublic, buffer);
+    // 寫進 images/（有 GITHUB_TOKEN 就是寫回 GitHub 專案）
+    await writeStored(`images/${cleanName}`, buffer, `後台上傳 ${cleanName}`);
+    if (GH_TOKEN) {
+      uploadedImages.set(cleanName, buffer);
+    } else {
+      fs.writeFileSync(path.join(PUBLIC_IMAGES_DIR, cleanName), buffer);
+    }
 
     const fileUrl = `/images/${cleanName}`;
     const inferred = inferTargetKeyFromFilename(cleanName);
@@ -225,21 +316,14 @@ app.post('/api/save-image', (req, res) => {
     };
 
     // Persist immediately into data/customAssets.json
-    const store = getFrozenAssetsStore();
+    const store = await getFrozenAssetsStore();
     store.deletedUrls = (store.deletedUrls || []).filter((u) => u !== fileUrl);
     store.assets = [newAsset, ...store.assets.filter((a) => a.url !== fileUrl)];
-    writeAssetsStore(store);
+    writeJson(ASSETS_PATH, store);
 
     // If a slot targetKey is specified and binding is requested, persist immediately into data/customSettings.json too
     if (bindToSlot !== false && targetKey && typeof targetKey === 'string' && targetKey.trim().length > 0) {
-      let existingSettings: any = {};
-      if (fs.existsSync(SETTINGS_FILE)) {
-        try {
-          existingSettings = JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf-8'));
-        } catch {
-          existingSettings = {};
-        }
-      }
+      const existingSettings: any = (await readJson(SETTINGS_PATH)) || {};
       const nextSettings = {
         ...existingSettings,
         customImages: {
@@ -247,7 +331,7 @@ app.post('/api/save-image', (req, res) => {
           [targetKey.trim()]: fileUrl
         }
       };
-      fs.writeFileSync(SETTINGS_FILE, JSON.stringify(nextSettings, null, 2), 'utf-8');
+      writeJson(SETTINGS_PATH, nextSettings);
     }
 
     console.log(`[API] Saved image to disk & storage: ${cleanName} (${buffer.length} bytes)`);
@@ -265,9 +349,9 @@ app.post('/api/save-image', (req, res) => {
 });
 
 // API 1b: Get persistent media assets library (frozen snapshot in customAssets.json; does not modify images/)
-app.get('/api/assets', (_req, res) => {
+app.get('/api/assets', async (_req, res) => {
   try {
-    const store = getFrozenAssetsStore();
+    const store = await getFrozenAssetsStore();
     return res.json({ assets: store.assets });
   } catch (err: any) {
     console.error('[API] Error reading assets:', err);
@@ -276,10 +360,10 @@ app.get('/api/assets', (_req, res) => {
 });
 
 // API 1c: Save media assets library to data/customAssets.json
-app.post('/api/assets', (req, res) => {
+app.post('/api/assets', async (req, res) => {
   try {
     const { assets, deletedUrl } = req.body;
-    const current = getFrozenAssetsStore();
+    const current = await getFrozenAssetsStore();
     const nextDeleted = new Set(current.deletedUrls || []);
     if (deletedUrl && typeof deletedUrl === 'string') {
       nextDeleted.add(deletedUrl);
@@ -292,7 +376,7 @@ app.post('/api/assets', (req, res) => {
       assets: sanitizedAssets,
       deletedUrls: Array.from(nextDeleted)
     };
-    writeAssetsStore(nextStore);
+    writeJson(ASSETS_PATH, nextStore);
     return res.json({ success: true, assets: nextStore.assets });
   } catch (err: any) {
     console.error('[API] Error saving assets:', err);
@@ -300,31 +384,15 @@ app.post('/api/assets', (req, res) => {
   }
 });
 
-// Helper: check whether an /images/... URL resolves to an existing file on disk
-function imageUrlExistsOnDisk(url: string): boolean {
-  if (!url || typeof url !== 'string') return false;
-  if (!url.startsWith('/images/')) return true;
-  const rel = url.replace(/^\/images\//, '');
-  if (!rel || rel.includes('..')) return false;
-  return fs.existsSync(path.join(IMAGES_DIR, rel)) || fs.existsSync(path.join(PUBLIC_IMAGES_DIR, rel));
-}
-
 // API 2: Save custom theme settings to data/customSettings.json with safe merge (never drops existing valid customImages or overwrites with dead URLs)
-app.post('/api/save-settings', (req, res) => {
+app.post('/api/save-settings', async (req, res) => {
   try {
     const { settings, deletedImageKey, deletedImageKeys } = req.body;
     if (!settings) {
       return res.status(400).json({ error: 'Missing settings payload' });
     }
 
-    let existing: any = {};
-    if (fs.existsSync(SETTINGS_FILE)) {
-      try {
-        existing = JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf-8'));
-      } catch (e) {
-        existing = {};
-      }
-    }
+    const existing: any = (await readJson(SETTINGS_PATH)) || {};
 
     const mergedImages: Record<string, string> = {
       ...(existing.customImages || {})
@@ -334,7 +402,7 @@ app.post('/api/save-settings', (req, res) => {
       for (const [k, v] of Object.entries(settings.customImages)) {
         if (typeof v !== 'string' || !v) continue;
         // Reject stale /images/... paths that do not exist on disk so old tabs cannot corrupt saved slots
-        if (v.startsWith('/images/') && !imageUrlExistsOnDisk(v)) {
+        if (v.startsWith('/images/') && !(await imageUrlExists(v))) {
           continue;
         }
         mergedImages[k] = v;
@@ -370,7 +438,7 @@ app.post('/api/save-settings', (req, res) => {
       }
     };
 
-    fs.writeFileSync(SETTINGS_FILE, JSON.stringify(merged, null, 2), 'utf-8');
+    writeJson(SETTINGS_PATH, merged);
     console.log('[API] Saved merged settings to customSettings.json');
     return res.json({ success: true, settings: merged });
   } catch (err: any) {
@@ -380,13 +448,9 @@ app.post('/api/save-settings', (req, res) => {
 });
 
 // API 3: Get custom theme settings from data/customSettings.json
-app.get('/api/settings', (_req, res) => {
+app.get('/api/settings', async (_req, res) => {
   try {
-    if (fs.existsSync(SETTINGS_FILE)) {
-      const raw = fs.readFileSync(SETTINGS_FILE, 'utf-8');
-      return res.json(JSON.parse(raw));
-    }
-    return res.json(null);
+    return res.json((await readJson(SETTINGS_PATH)) || null);
   } catch (err: any) {
     console.error('[API] Error reading settings:', err);
     return res.status(500).json({ error: 'Failed to read settings' });

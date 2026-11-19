@@ -1,7 +1,5 @@
 import { MediaAsset, CustomThemeSettings } from '../types/media';
 
-const STORAGE_KEY_ASSETS = 'tea_kiosk_media_assets_v2';
-const STORAGE_KEY_SETTINGS = 'tea_kiosk_theme_settings_v2';
 
 // Frozen spirit illustrations for the 6 emotions (matched to uploaded transparent PNGs & print labels)
 export const DEFAULT_EMOTION_IMAGES: Record<string, string> = {
@@ -213,30 +211,8 @@ export const DEFAULT_SETTINGS: CustomThemeSettings = {
   emotionNfcChips: { ...DEFAULT_EMOTION_NFC_CHIPS }
 };
 
-export const getSavedAssets = (): MediaAsset[] => {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY_ASSETS);
-    if (!raw) return DEFAULT_ASSETS;
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) && parsed.length > 0 ? parsed : DEFAULT_ASSETS;
-  } catch (err) {
-    console.error('Error loading media assets from localStorage', err);
-    return DEFAULT_ASSETS;
-  }
-};
-
+// 素材清單只存在伺服器（有設定 GITHUB_TOKEN 時會寫回 GitHub 專案），瀏覽器不留任何存檔
 export const saveAssets = (assets: MediaAsset[], deletedUrl?: string): void => {
-  try {
-    // Avoid exceeding 5MB localStorage quota if an offline base64 fallback exists
-    const lightweightAssets = assets.filter(
-      (a) => a && typeof a.url === 'string' && (!a.url.startsWith('data:') || a.url.length < 200000)
-    );
-    localStorage.setItem(STORAGE_KEY_ASSETS, JSON.stringify(lightweightAssets));
-  } catch (err) {
-    console.error('Error saving assets to localStorage', err);
-  }
-
-  // Always persist asset library to server disk (data/customAssets.json)
   fetch('/api/assets', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -258,61 +234,6 @@ export const fetchAssetsFromServer = async (): Promise<MediaAsset[] | null> => {
     console.warn('[Storage] Could not fetch assets from server:', err);
   }
   return null;
-};
-
-export const getSavedSettings = (): CustomThemeSettings => {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY_SETTINGS);
-    if (!raw) return DEFAULT_SETTINGS;
-    const parsed = JSON.parse(raw);
-
-    // Merge custom images, ignoring stale external unsplash links or legacy removed paths
-    const mergedImages = { ...DEFAULT_CUSTOM_IMAGES };
-    if (parsed.customImages) {
-      Object.entries(parsed.customImages).forEach(([k, v]) => {
-        if (
-          typeof v === 'string' &&
-          !v.includes('unsplash.com') &&
-          !/小怪獸[1-6]\.png$/.test(v) &&
-          !/_179(497|503)/.test(v)
-        ) {
-          mergedImages[k] = v;
-        }
-      });
-    }
-
-    // Respect user's saved customTexts without forceful default overwrite on refresh,
-    // while keeping locked monster names immutable.
-    const mergedTexts = parsed.customTexts 
-      ? { ...DEFAULT_TEXTS, ...parsed.customTexts }
-      : { ...DEFAULT_TEXTS };
-
-    Object.entries(LOCKED_MONSTER_NAMES).forEach(([emotionId, lockedName]) => {
-      mergedTexts[`monster-${emotionId}-name`] = lockedName;
-    });
-
-    return {
-      ...DEFAULT_SETTINGS,
-      ...parsed,
-      processDurationSeconds: parsed.processDurationSeconds || 30,
-      emotionButtonSize: parsed.emotionButtonSize || 150,
-      emotionButtonSizes: {
-        ...DEFAULT_BUTTON_SIZES,
-        ...(parsed.emotionButtonSizes || {})
-      },
-      emotionPositions: parsed.emotionPositions || {},
-      teaCupSize: parsed.teaCupSize || 210,
-      customImages: mergedImages,
-      customTexts: mergedTexts,
-      emotionNfcChips: {
-        ...DEFAULT_EMOTION_NFC_CHIPS,
-        ...(parsed.emotionNfcChips || {})
-      }
-    };
-  } catch (err) {
-    console.error('Error loading settings from localStorage', err);
-    return DEFAULT_SETTINGS;
-  }
 };
 
 export const saveImageToServer = async (
@@ -363,12 +284,7 @@ export const saveSettings = (
 ): void => {
   try {
     const json = JSON.stringify({ settings, deletedImageKey, deletedImageKeys });
-    try {
-      localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(settings));
-    } catch (storageErr) {
-      console.warn('[Storage] localStorage save skipped/quota reached:', storageErr);
-    }
-    // Asynchronously sync to server disk (data/customSettings.json)
+    // 設定只存在伺服器（有設定 GITHUB_TOKEN 時會寫回 GitHub 專案），瀏覽器不留任何存檔
     fetch('/api/save-settings', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
