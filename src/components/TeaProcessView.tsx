@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { TeaProduct } from '../types/tea';
+import { SlotMedia } from './SlotMedia';
 import { Compass, Droplets, Flame, Sparkles, Check } from 'lucide-react';
 
 interface Props {
@@ -98,7 +99,7 @@ export const TeaProcessView: React.FC<Props> = ({
       */}
       {customTeaChart ? (
         <div className="flex-1 w-full min-h-0 flex items-center justify-center overflow-hidden p-0 m-0">
-          <img
+          <SlotMedia
             key={`${tea.id}-${customTeaChart}`}
             src={customTeaChart}
             alt={`${tea.name} 認識茶介紹圖`}
