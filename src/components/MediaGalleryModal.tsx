@@ -3,6 +3,7 @@ import { MediaAsset, CustomThemeSettings } from '../types/media';
 import { TEAS, EMOTIONS } from '../data/teaData';
 import { DEFAULT_TEXTS, DEFAULT_EMOTION_NFC_CHIPS, saveImageToServer, saveSettings } from '../utils/mediaStorage';
 import { EMOTION_NFC_CHIP_NAMES } from '../utils/nfcMatcher';
+import { SlotMedia } from './SlotMedia';
 import { 
   Upload, Image as ImageIcon, Trash2, Check, RefreshCw, X, Sliders, Layers, 
   Eye, CheckCircle2, AlertCircle, FilePlus, Type, RotateCcw, Lock, Radio
@@ -473,7 +474,7 @@ export const MediaGalleryModal: React.FC<Props> = ({
                       {/* Thumbnail Preview Area */}
                       <div className="mt-3 h-28 w-full rounded-xl bg-stone-100 border border-stone-200 overflow-hidden relative group">
                         {boundUrl ? (
-                          <img
+                          <SlotMedia
                             src={boundUrl}
                             alt={slot.label}
                             className={`w-full h-full transition-transform group-hover:scale-105 ${
@@ -559,7 +560,7 @@ export const MediaGalleryModal: React.FC<Props> = ({
                     >
                       <div className="h-32 w-full bg-stone-100 relative overflow-hidden">
                         {asset.url ? (
-                          <img
+                          <SlotMedia
                             src={asset.url}
                             alt={asset.name}
                             className="w-full h-full object-cover transition-transform group-hover:scale-105"
