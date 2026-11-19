@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Sparkles, ArrowRight } from 'lucide-react';
 import { sounds } from '../utils/audio';
+import { SlotMedia } from './SlotMedia';
 
 interface Props {
   onStart: () => void;
@@ -54,9 +55,9 @@ export const HomeCoverView: React.FC<Props> = ({
       {/* User's custom homepage screen image: Completely borderless, no frame, full bleed */}
       {customCoverImage ? (
         <div className="relative w-full h-full flex items-center justify-center p-0 m-0">
-          <img 
-            src={customCoverImage} 
-            alt="展覽首頁封面" 
+          <SlotMedia
+            src={customCoverImage}
+            alt="展覽首頁封面"
             className="w-full h-full object-contain select-none pointer-events-none"
           />
         </div>

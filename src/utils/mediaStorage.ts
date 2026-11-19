@@ -13,7 +13,7 @@ export const DEFAULT_EMOTION_IMAGES: Record<string, string> = {
 
 // Frozen slot bindings for cover, cup, tea GIFs, tea charts, print labels, and monsters
 export const DEFAULT_CUSTOM_IMAGES: Record<string, string> = {
-  'home-cover': '/images/首頁.jpg',
+  'home-cover': '/images/封面.mp4',
   'cup-center': '/images/熱茶杯1.png',
   'process-gif-muzha-tieguanyin': '/images/木柵鐵觀音.mp4',
   'process-gif-wenshan-baozhong': '/images/文山包種茶.mp4',
