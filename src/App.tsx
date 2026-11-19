@@ -105,6 +105,23 @@ export default function App() {
     });
   }, [isHome]);
 
+  // 滑鼠游標靜止 3 秒就藏起來，一動就出現（展場不用一直看到游標）
+  useEffect(() => {
+    const root = document.documentElement;
+    let timer = 0;
+    const hideLater = () => {
+      root.classList.remove('hide-cursor');
+      clearTimeout(timer);
+      timer = window.setTimeout(() => root.classList.add('hide-cursor'), 3000);
+    };
+    root.classList.add('hide-cursor');
+    window.addEventListener('mousemove', hideLater);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('mousemove', hideLater);
+    };
+  }, []);
+
   // Sync assets and settings to backend
   const handleUpdateAssets = (newAssets: MediaAsset[], deletedUrl?: string) => {
     setAssets(newAssets);

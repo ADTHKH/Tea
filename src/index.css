@@ -268,3 +268,9 @@
     background-image: none !important;
   }
 }
+
+/* 滑鼠游標靜止時隱藏（App.tsx 控制 hide-cursor） */
+html.hide-cursor,
+html.hide-cursor * {
+  cursor: none !important;
+}
