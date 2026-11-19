@@ -1,0 +1,500 @@
+{
+  "assets": [
+    {
+      "id": "disk-01%E6%9C%A8%E6%9F%B5%E9%90%B5%E8%A7%80%E9%9F%B3.jpg",
+      "name": "01木柵鐵觀音",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/01木柵鐵觀音.jpg",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/01木柵鐵觀音.jpg"
+    },
+    {
+      "id": "disk-02%E6%96%87%E5%B1%B1%E5%8C%85%E7%A8%AE%E8%8C%B6.jpg",
+      "name": "02文山包種茶",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/02文山包種茶.jpg",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/02文山包種茶.jpg"
+    },
+    {
+      "id": "disk-03%E9%90%B5%E8%A7%80%E9%9F%B3%E7%B4%85%E8%8C%B6.jpg",
+      "name": "03鐵觀音紅茶",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/03鐵觀音紅茶.jpg",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/03鐵觀音紅茶.jpg"
+    },
+    {
+      "id": "disk-04%E5%8F%B0%E7%81%A3%E5%9B%9B%E5%AD%A3%E6%98%A5.jpg",
+      "name": "04台灣四季春",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/04台灣四季春.jpg",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/04台灣四季春.jpg"
+    },
+    {
+      "id": "disk-05%E5%8F%B0%E7%81%A3%E9%AB%98%E5%B1%B1%E7%83%8F%E9%BE%8D%E8%8C%B6.jpg",
+      "name": "05台灣高山烏龍茶",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/05台灣高山烏龍茶.jpg",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/05台灣高山烏龍茶.jpg"
+    },
+    {
+      "id": "disk-06%E9%87%91%E8%90%B1%E7%83%8F%E9%BE%8D%E8%8C%B6.jpg",
+      "name": "06金萱烏龍茶",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/06金萱烏龍茶.jpg",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/06金萱烏龍茶.jpg"
+    },
+    {
+      "id": "disk-print-label-calm_1795065806738.jpg",
+      "name": "print-label-calm_1795065806738",
+      "category": "label",
+      "targetKey": "print-label-calm",
+      "url": "/images/print-label-calm_1795065806738.jpg",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/print-label-calm_1795065806738.jpg"
+    },
+    {
+      "id": "disk-print-label-grounded_1795065824721.jpg",
+      "name": "print-label-grounded_1795065824721",
+      "category": "label",
+      "targetKey": "print-label-grounded",
+      "url": "/images/print-label-grounded_1795065824721.jpg",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/print-label-grounded_1795065824721.jpg"
+    },
+    {
+      "id": "disk-print-label-joy_1795065816928.jpg",
+      "name": "print-label-joy_1795065816928",
+      "category": "label",
+      "targetKey": "print-label-joy",
+      "url": "/images/print-label-joy_1795065816928.jpg",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/print-label-joy_1795065816928.jpg"
+    },
+    {
+      "id": "disk-print-label-nostalgic_1795065819752.jpg",
+      "name": "print-label-nostalgic_1795065819752",
+      "category": "label",
+      "targetKey": "print-label-nostalgic",
+      "url": "/images/print-label-nostalgic_1795065819752.jpg",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/print-label-nostalgic_1795065819752.jpg"
+    },
+    {
+      "id": "disk-print-label-vibrant_1795065822594.jpg",
+      "name": "print-label-vibrant_1795065822594",
+      "category": "label",
+      "targetKey": "print-label-vibrant",
+      "url": "/images/print-label-vibrant_1795065822594.jpg",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/print-label-vibrant_1795065822594.jpg"
+    },
+    {
+      "id": "disk-print-label-warm_1795065810358.jpg",
+      "name": "print-label-warm_1795065810358",
+      "category": "label",
+      "targetKey": "print-label-warm",
+      "url": "/images/print-label-warm_1795065810358.jpg",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/print-label-warm_1795065810358.jpg"
+    },
+    {
+      "id": "disk-%E5%8F%B0%E7%81%A3%E5%9B%9B%E5%AD%A3%E6%98%A5.mp4",
+      "name": "台灣四季春",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/台灣四季春.mp4",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/台灣四季春.mp4"
+    },
+    {
+      "id": "disk-%E5%8F%B0%E7%81%A3%E5%9B%9B%E5%AD%A3%E6%98%A5_1795066683515.gif",
+      "name": "台灣四季春_1795066683515",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/台灣四季春_1795066683515.gif",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/台灣四季春_1795066683515.gif"
+    },
+    {
+      "id": "disk-%E5%8F%B0%E7%81%A3%E9%AB%98%E5%B1%B1%E7%83%8F%E9%BE%8D%E8%8C%B6.mp4",
+      "name": "台灣高山烏龍茶",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/台灣高山烏龍茶.mp4",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/台灣高山烏龍茶.mp4"
+    },
+    {
+      "id": "disk-%E5%8F%B0%E7%81%A3%E9%AB%98%E5%B1%B1%E7%83%8F%E9%BE%8D%E8%8C%B6_1795066657663.gif",
+      "name": "台灣高山烏龍茶_1795066657663",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/台灣高山烏龍茶_1795066657663.gif",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/台灣高山烏龍茶_1795066657663.gif"
+    },
+    {
+      "id": "disk-%E5%B0%81%E9%9D%A2.mp4",
+      "name": "封面",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/封面.mp4",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/封面.mp4"
+    },
+    {
+      "id": "disk-%E5%B0%81%E9%9D%A2_1795074065075.gif",
+      "name": "封面_1795074065075",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/封面_1795074065075.gif",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/封面_1795074065075.gif"
+    },
+    {
+      "id": "disk-%E5%B0%8F%E6%80%AA%E7%8D%B81.jpg",
+      "name": "小怪獸1",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/小怪獸1.jpg",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/小怪獸1.jpg"
+    },
+    {
+      "id": "disk-%E5%B0%8F%E6%80%AA%E7%8D%B81.png",
+      "name": "小怪獸1",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/小怪獸1.png",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/小怪獸1.png"
+    },
+    {
+      "id": "disk-%E5%B0%8F%E6%80%AA%E7%8D%B81_1795067346418.jpg",
+      "name": "小怪獸1_1795067346418",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/小怪獸1_1795067346418.jpg",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/小怪獸1_1795067346418.jpg"
+    },
+    {
+      "id": "disk-%E5%B0%8F%E6%80%AA%E7%8D%B81_1795067386396.png",
+      "name": "小怪獸1_1795067386396",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/小怪獸1_1795067386396.png",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/小怪獸1_1795067386396.png"
+    },
+    {
+      "id": "disk-%E5%B0%8F%E6%80%AA%E7%8D%B82.jpg",
+      "name": "小怪獸2",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/小怪獸2.jpg",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/小怪獸2.jpg"
+    },
+    {
+      "id": "disk-%E5%B0%8F%E6%80%AA%E7%8D%B82.png",
+      "name": "小怪獸2",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/小怪獸2.png",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/小怪獸2.png"
+    },
+    {
+      "id": "disk-%E5%B0%8F%E6%80%AA%E7%8D%B82_1795067389767.png",
+      "name": "小怪獸2_1795067389767",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/小怪獸2_1795067389767.png",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/小怪獸2_1795067389767.png"
+    },
+    {
+      "id": "disk-%E5%B0%8F%E6%80%AA%E7%8D%B83.jpg",
+      "name": "小怪獸3",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/小怪獸3.jpg",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/小怪獸3.jpg"
+    },
+    {
+      "id": "disk-%E5%B0%8F%E6%80%AA%E7%8D%B83.png",
+      "name": "小怪獸3",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/小怪獸3.png",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/小怪獸3.png"
+    },
+    {
+      "id": "disk-%E5%B0%8F%E6%80%AA%E7%8D%B83_1795067392232.png",
+      "name": "小怪獸3_1795067392232",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/小怪獸3_1795067392232.png",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/小怪獸3_1795067392232.png"
+    },
+    {
+      "id": "disk-%E5%B0%8F%E6%80%AA%E7%8D%B84.jpg",
+      "name": "小怪獸4",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/小怪獸4.jpg",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/小怪獸4.jpg"
+    },
+    {
+      "id": "disk-%E5%B0%8F%E6%80%AA%E7%8D%B84.png",
+      "name": "小怪獸4",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/小怪獸4.png",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/小怪獸4.png"
+    },
+    {
+      "id": "disk-%E5%B0%8F%E6%80%AA%E7%8D%B84_1795067394897.png",
+      "name": "小怪獸4_1795067394897",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/小怪獸4_1795067394897.png",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/小怪獸4_1795067394897.png"
+    },
+    {
+      "id": "disk-%E5%B0%8F%E6%80%AA%E7%8D%B85.jpg",
+      "name": "小怪獸5",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/小怪獸5.jpg",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/小怪獸5.jpg"
+    },
+    {
+      "id": "disk-%E5%B0%8F%E6%80%AA%E7%8D%B85.png",
+      "name": "小怪獸5",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/小怪獸5.png",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/小怪獸5.png"
+    },
+    {
+      "id": "disk-%E5%B0%8F%E6%80%AA%E7%8D%B85_1795067374795.png",
+      "name": "小怪獸5_1795067374795",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/小怪獸5_1795067374795.png",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/小怪獸5_1795067374795.png"
+    },
+    {
+      "id": "disk-%E5%B0%8F%E6%80%AA%E7%8D%B85_1795067397539.png",
+      "name": "小怪獸5_1795067397539",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/小怪獸5_1795067397539.png",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/小怪獸5_1795067397539.png"
+    },
+    {
+      "id": "disk-%E5%B0%8F%E6%80%AA%E7%8D%B86.jpg",
+      "name": "小怪獸6",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/小怪獸6.jpg",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/小怪獸6.jpg"
+    },
+    {
+      "id": "disk-%E5%B0%8F%E6%80%AA%E7%8D%B86.png",
+      "name": "小怪獸6",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/小怪獸6.png",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/小怪獸6.png"
+    },
+    {
+      "id": "disk-%E5%B0%8F%E6%80%AA%E7%8D%B86_1795067399904.png",
+      "name": "小怪獸6_1795067399904",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/小怪獸6_1795067399904.png",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/小怪獸6_1795067399904.png"
+    },
+    {
+      "id": "disk-%E5%BF%83%E5%8B%95.jpg",
+      "name": "心動",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/心動.jpg",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/心動.jpg"
+    },
+    {
+      "id": "disk-%E6%84%89%E6%82%85.jpg",
+      "name": "愉悅",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/愉悅.jpg",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/愉悅.jpg"
+    },
+    {
+      "id": "disk-%E6%8E%A2%E7%B4%A2.jpg",
+      "name": "探索",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/探索.jpg",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/探索.jpg"
+    },
+    {
+      "id": "disk-%E6%94%BE%E9%AC%86.jpg",
+      "name": "放鬆",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/放鬆.jpg",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/放鬆.jpg"
+    },
+    {
+      "id": "disk-%E6%96%87%E5%B1%B1%E5%8C%85%E7%A8%AE%E8%8C%B6.mp4",
+      "name": "文山包種茶",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/文山包種茶.mp4",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/文山包種茶.mp4"
+    },
+    {
+      "id": "disk-%E6%96%87%E5%B1%B1%E5%8C%85%E7%A8%AE%E8%8C%B6_1795066609236.gif",
+      "name": "文山包種茶_1795066609236",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/文山包種茶_1795066609236.gif",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/文山包種茶_1795066609236.gif"
+    },
+    {
+      "id": "disk-%E6%9C%A8%E6%9F%B5%E9%90%B5%E8%A7%80%E9%9F%B3.mp4",
+      "name": "木柵鐵觀音",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/木柵鐵觀音.mp4",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/木柵鐵觀音.mp4"
+    },
+    {
+      "id": "disk-%E6%9C%A8%E6%9F%B5%E9%90%B5%E8%A7%80%E9%9F%B3_1795066600118.gif",
+      "name": "木柵鐵觀音_1795066600118",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/木柵鐵觀音_1795066600118.gif",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/木柵鐵觀音_1795066600118.gif"
+    },
+    {
+      "id": "disk-%E6%B2%89%E6%B5%B8.jpg",
+      "name": "沉浸",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/沉浸.jpg",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/沉浸.jpg"
+    },
+    {
+      "id": "disk-%E6%BA%AB%E6%9F%94.jpg",
+      "name": "溫柔",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/溫柔.jpg",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/溫柔.jpg"
+    },
+    {
+      "id": "disk-%E7%86%B1%E8%8C%B6%E6%9D%AF1.png",
+      "name": "熱茶杯1",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/熱茶杯1.png",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/熱茶杯1.png"
+    },
+    {
+      "id": "disk-%E7%AC%AC%E4%BA%8C%E5%80%8B%E5%95%8F%E9%A1%8C_1795074070262.gif",
+      "name": "第二個問題_1795074070262",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/第二個問題_1795074070262.gif",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/第二個問題_1795074070262.gif"
+    },
+    {
+      "id": "disk-%E9%87%91%E8%90%B1%E7%83%8F%E9%BE%8D%E8%8C%B6.mp4",
+      "name": "金萱烏龍茶",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/金萱烏龍茶.mp4",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/金萱烏龍茶.mp4"
+    },
+    {
+      "id": "disk-%E9%87%91%E8%90%B1%E7%83%8F%E9%BE%8D%E8%8C%B6_1795066669452.gif",
+      "name": "金萱烏龍茶_1795066669452",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/金萱烏龍茶_1795066669452.gif",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/金萱烏龍茶_1795066669452.gif"
+    },
+    {
+      "id": "disk-%E9%90%B5%E8%A7%80%E9%9F%B3%E7%B4%85%E8%8C%B6.mp4",
+      "name": "鐵觀音紅茶",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/鐵觀音紅茶.mp4",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/鐵觀音紅茶.mp4"
+    },
+    {
+      "id": "disk-%E9%90%B5%E8%A7%80%E9%9F%B3%E7%B4%85%E8%8C%B6_1795066636780.gif",
+      "name": "鐵觀音紅茶_1795066636780",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/鐵觀音紅茶_1795066636780.gif",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/鐵觀音紅茶_1795066636780.gif"
+    },
+    {
+      "id": "disk-%E9%A6%96%E9%A0%81.jpg",
+      "name": "首頁",
+      "category": "general",
+      "targetKey": "",
+      "url": "/images/首頁.jpg",
+      "uploadedAt": "2026/11/19",
+      "notes": "images/首頁.jpg"
+    }
+  ],
+  "deletedUrls": []
+}
