@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   X, Image as ImageIcon, Volume2, VolumeX, 
-  FastForward, RotateCcw, Maximize, Minimize, Type, Sparkles, Home, Radio, Upload
+  FastForward, RotateCcw, Maximize, Minimize, Type, Sparkles, Home, Radio, Upload, Printer
 } from 'lucide-react';
 import { sounds } from '../utils/audio';
+import { pairPrinter } from '../utils/receiptPrinter';
 
 interface Props {
   onOpenGallery: (tab?: 'slots' | 'upload' | 'text' | 'settings') => void;
@@ -270,6 +271,20 @@ export const HamburgerMenu: React.FC<Props> = ({
               {isFullscreen ? <Minimize className="w-4 h-4" /> : <Maximize className="w-4 h-4" />}
             </div>
             <span>{isFullscreen ? '退出全螢幕' : '切換全螢幕模式'}</span>
+          </button>
+
+          {/* 連接 USB 收據機（樹莓派跑過設定腳本就不用按） */}
+          <button
+            onClick={() => {
+              pairPrinter().catch((err) => alert(`收據機沒有連上：${err.message}`));
+              setIsOpen(false);
+            }}
+            className="w-full px-3 py-1.5 rounded-xl hover:bg-stone-100 text-stone-700 flex items-center gap-2.5 transition-colors cursor-pointer text-left text-xs"
+          >
+            <div className="w-7 h-7 rounded-lg bg-stone-100 text-stone-600 flex items-center justify-center shrink-0">
+              <Printer className="w-4 h-4" />
+            </div>
+            <span>連接收據機</span>
           </button>
 
           {/* 9. Return to Home Cover */}
