@@ -4,6 +4,7 @@ import { TeaMonsterAvatar } from './TeaMonsterAvatar';
 import { Printer, RotateCcw, CheckCircle2, Send } from 'lucide-react';
 import { sounds } from '../utils/audio';
 import { DEFAULT_EMOTION_IMAGES, DEFAULT_TEXTS } from '../utils/mediaStorage';
+import { printImage } from '../utils/receiptPrinter';
 
 interface Props {
   tea: TeaProduct;
@@ -32,7 +33,7 @@ export const PrinterOutput: React.FC<Props> = ({
   });
 
   const [printFinished, setPrintFinished] = useState<boolean>(false);
-  const [transmissionStatus, setTransmissionStatus] = useState<'transmitting' | 'printed'>('transmitting');
+  const [transmissionStatus, setTransmissionStatus] = useState<'transmitting' | 'printed' | 'failed'>('transmitting');
   const [countdown, setCountdown] = useState<number>(30); // 30秒後自動回到首頁
   const printTriggeredRef = useRef<boolean>(false);
 
@@ -65,20 +66,11 @@ export const PrinterOutput: React.FC<Props> = ({
   useEffect(() => {
     sounds.playPrinterFeed();
 
-    // 1. Simulate automated hardware signal transmission & automatic window.print trigger
-    const printTimer = setTimeout(() => {
-      setTransmissionStatus('printed');
-      setPrintFinished(true);
-      
-      if (!printTriggeredRef.current) {
-        printTriggeredRef.current = true;
-        try {
-          window.print();
-        } catch (err) {
-          console.warn('Auto print triggered (iframe protected):', err);
-        }
-      }
-    }, 1200);
+    // 1. 直接用 USB 收據機印出標籤圖（沒有標籤圖就印小怪獸），不跳列印視窗
+    if (!printTriggeredRef.current) {
+      printTriggeredRef.current = true;
+      handlePrint();
+    }
 
     // 2. 30 seconds countdown to automatically return to home/first step
     const countdownInterval = setInterval(() => {
@@ -93,18 +85,26 @@ export const PrinterOutput: React.FC<Props> = ({
     }, 1000);
 
     return () => {
-      clearTimeout(printTimer);
       clearInterval(countdownInterval);
     };
   }, [onRestart]);
 
+  function handlePrint() {
+    setTransmissionStatus('transmitting');
+    printImage(customLabelImage || monsterImage)
+      .then(() => {
+        setTransmissionStatus('printed');
+        setPrintFinished(true);
+      })
+      .catch((err) => {
+        console.error('[收據機]', err);
+        setTransmissionStatus('failed');
+      });
+  }
+
   const handleManualPrint = () => {
     sounds.playPrinterFeed();
-    try {
-      window.print();
-    } catch (e) {
-      console.error(e);
-    }
+    handlePrint();
   };
 
   const progressPercent = Math.max(0, Math.min(100, (countdown / 30) * 100));
@@ -119,6 +119,8 @@ export const PrinterOutput: React.FC<Props> = ({
               <Send className="w-3.5 h-3.5 text-emerald-600 animate-pulse" />
               <span>正傳輸標籤列印...</span>
             </span>
+          ) : transmissionStatus === 'failed' ? (
+            <span className="text-xs text-rose-700 font-bold">收據機沒有回應，請工作人員檢查電源與 USB</span>
           ) : (
             <span className="flex items-center gap-1.5 text-xs text-emerald-800 font-bold">
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
