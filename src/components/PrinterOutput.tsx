@@ -6,6 +6,27 @@ import { sounds } from '../utils/audio';
 import { DEFAULT_EMOTION_IMAGES, DEFAULT_TEXTS } from '../utils/mediaStorage';
 import { printImage } from '../utils/receiptPrinter';
 
+// 標籤設計稿寬 1016px；日期時間印在左上角，位置、大小對齊原本設計稿上寫死日期的地方
+const LABEL_DESIGN_WIDTH = 1016;
+const STAMP_FONT = '500 42px "Noto Sans TC", sans-serif';
+
+async function stampTimeOnLabel(url: string, text: string): Promise<string> {
+  const img = new Image();
+  img.src = url;
+  await img.decode();
+  const k = img.naturalWidth / LABEL_DESIGN_WIDTH;
+  const canvas = document.createElement('canvas');
+  canvas.width = img.naturalWidth;
+  canvas.height = img.naturalHeight;
+  const ctx = canvas.getContext('2d')!;
+  ctx.drawImage(img, 0, 0);
+  await document.fonts.load(STAMP_FONT, text).catch(() => {});
+  ctx.font = STAMP_FONT.replace('42px', `${42 * k}px`);
+  ctx.fillStyle = '#000';
+  ctx.fillText(text, 105 * k, 62 * k);
+  return canvas.toDataURL('image/png');
+}
+
 interface Props {
   tea: TeaProduct;
   emotion: EmotionOption;
@@ -29,7 +50,7 @@ export const PrinterOutput: React.FC<Props> = ({
   });
   const [currentTime] = useState<string>(() => {
     const d = new Date();
-    return d.toLocaleString('zh-TW', { hour12: false });
+    return d.toLocaleString('zh-TW', { hour12: false, timeZone: 'Asia/Taipei' });
   });
 
   const [printFinished, setPrintFinished] = useState<boolean>(false);
@@ -46,6 +67,26 @@ export const PrinterOutput: React.FC<Props> = ({
     customImages[`print-label-${emotion.id}`] ||
     customImages['print-label-default'] ||
     null;
+
+  // 標籤圖印上當下真實時間；畫面顯示和印出來的是同一張
+  const [stampedLabel, setStampedLabel] = useState<string | null>(null);
+  useEffect(() => {
+    if (!customLabelImage) return;
+    stampTimeOnLabel(customLabelImage, currentTime)
+      .then(setStampedLabel)
+      .catch((err) => {
+        console.error('[標籤時間]', err);
+        setStampedLabel(customLabelImage);
+      });
+  }, [customLabelImage, currentTime]);
+  const printSource = customLabelImage ? stampedLabel : monsterImage;
+
+  // 標籤準備好就自動印（沒有標籤圖就印小怪獸），只印一次
+  useEffect(() => {
+    if (!printSource || printTriggeredRef.current) return;
+    printTriggeredRef.current = true;
+    handlePrint();
+  }, [printSource]);
 
   // Monster custom text overrides based on emotion (name is locked)
   const monsterName = DEFAULT_TEXTS[`monster-${emotion.id}-name`] || monster.name;
@@ -66,13 +107,7 @@ export const PrinterOutput: React.FC<Props> = ({
   useEffect(() => {
     sounds.playPrinterFeed();
 
-    // 1. 直接用 USB 收據機印出標籤圖（沒有標籤圖就印小怪獸），不跳列印視窗
-    if (!printTriggeredRef.current) {
-      printTriggeredRef.current = true;
-      handlePrint();
-    }
-
-    // 2. 30 seconds countdown to automatically return to home/first step
+    // 30 seconds countdown to automatically return to home/first step
     const countdownInterval = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
@@ -90,8 +125,9 @@ export const PrinterOutput: React.FC<Props> = ({
   }, [onRestart]);
 
   function handlePrint() {
+    if (!printSource) return;
     setTransmissionStatus('transmitting');
-    printImage(customLabelImage || monsterImage)
+    printImage(printSource)
       .then(() => {
         setTransmissionStatus('printed');
         setPrintFinished(true);
@@ -143,7 +179,7 @@ export const PrinterOutput: React.FC<Props> = ({
             /* User-uploaded pre-made Print Label Graphic (zero left/right white borders) */
             <div className="w-fit max-w-full mx-auto rounded-xl shadow-xl overflow-hidden animate-print-feed relative print:shadow-none print:rounded-none print:w-full print:m-0">
               <img
-                src={customLabelImage}
+                src={stampedLabel || customLabelImage}
                 alt={`${displayMonster.name} 列印標籤`}
                 className="block w-auto max-w-full h-auto max-h-[64vh] select-none pointer-events-none print:max-h-none print:w-full"
               />
