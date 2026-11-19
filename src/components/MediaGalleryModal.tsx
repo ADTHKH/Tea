@@ -247,7 +247,7 @@ export const MediaGalleryModal: React.FC<Props> = ({
       customTexts: updatedTexts
     };
     onUpdateSettings(newSettings);
-    // Automatically save immediately to server backend (customSettings.json) and localStorage
+    // Automatically save immediately to server backend (customSettings.json)
     saveSettings(newSettings);
   };
 
