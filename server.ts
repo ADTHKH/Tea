@@ -92,31 +92,36 @@ async function writeStored(repoPath: string, content: Buffer, message: string): 
   }
 }
 
-// 設定檔先放記憶體，停止變動 2 秒後才寫出一次，避免拖滑桿時每秒寫幾十次
-const jsonCache = new Map<string, any>();
+// 設定檔先放記憶體，停止變動 2 秒後才寫出一次，避免拖滑桿時每秒寫幾十次。
+// 讀取最多沿用 10 秒，之後重新跟 GitHub 拿，別台主機或別的伺服器改的設定才看得到。
+const JSON_FRESH_MS = 10_000;
+const jsonCache = new Map<string, { data: any; at: number }>();
 const flushTimers = new Map<string, NodeJS.Timeout>();
 
 async function readJson(repoPath: string): Promise<any> {
-  if (!jsonCache.has(repoPath)) {
-    const buf = await readStored(repoPath);
-    let parsed = null;
-    try {
-      parsed = buf ? JSON.parse(buf.toString('utf-8')) : null;
-    } catch {}
-    jsonCache.set(repoPath, parsed);
-  }
-  return jsonCache.get(repoPath);
+  const hit = jsonCache.get(repoPath);
+  if (hit && (flushTimers.has(repoPath) || Date.now() - hit.at < JSON_FRESH_MS)) return hit.data;
+  const buf = await readStored(repoPath);
+  let parsed = null;
+  try {
+    parsed = buf ? JSON.parse(buf.toString('utf-8')) : null;
+  } catch {}
+  jsonCache.set(repoPath, { data: parsed, at: Date.now() });
+  return parsed;
 }
 
 function writeJson(repoPath: string, data: any) {
-  jsonCache.set(repoPath, data);
+  jsonCache.set(repoPath, { data, at: Date.now() });
   clearTimeout(flushTimers.get(repoPath));
   flushTimers.set(
     repoPath,
     setTimeout(() => {
-      writeStored(repoPath, Buffer.from(JSON.stringify(data, null, 2), 'utf-8'), `後台更新 ${repoPath}`).catch((err) =>
-        console.error('[Storage] 存檔失敗:', err)
-      );
+      writeStored(repoPath, Buffer.from(JSON.stringify(data, null, 2), 'utf-8'), `後台更新 ${repoPath}`)
+        .catch((err) => console.error('[Storage] 存檔失敗:', err))
+        .finally(() => {
+          flushTimers.delete(repoPath);
+          jsonCache.set(repoPath, { data, at: Date.now() });
+        });
     }, 2000)
   );
 }

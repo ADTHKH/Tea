@@ -62,8 +62,10 @@ export default function App() {
   const wrongChipTimerRef = useRef<number | null>(null);
   const emotionNfcTimerRef = useRef<number | null>(null);
 
-  // Load server-persisted settings & asset library on mount (authoritative from disk; never resurrects stale localStorage items)
+  // 每次回到首頁（開機、每位觀眾結束後）都重新讀伺服器設定，別台主機改的設定下一位觀眾就看得到
+  const isHome = currentStage === 'home';
   useEffect(() => {
+    if (!isHome) return;
     fetch('/api/settings')
       .then((res) => res.json())
       .then((serverSettings) => {
@@ -104,7 +106,7 @@ export default function App() {
         setAssets(serverAssets);
       }
     });
-  }, []);
+  }, [isHome]);
 
   useEffect(() => {
     if (IS_ADMIN) return;
