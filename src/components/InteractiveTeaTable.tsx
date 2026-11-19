@@ -2,7 +2,7 @@ import React from 'react';
 import { TEAS } from '../data/teaData';
 import { TeaProduct } from '../types/tea';
 import { sounds } from '../utils/audio';
-import { Radio, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Radio, Sparkles, CheckCircle2 } from './icons';
 
 interface Props {
   currentTea: TeaProduct;

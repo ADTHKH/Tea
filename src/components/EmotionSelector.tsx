@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { EMOTIONS } from '../data/teaData';
 import { EmotionOption, TeaProduct } from '../types/tea';
-import { CheckCircle2 } from 'lucide-react';
+import { CheckCircle2 } from './icons';
 import { sounds } from '../utils/audio';
 
 interface Props {

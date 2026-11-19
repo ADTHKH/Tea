@@ -31,7 +31,7 @@ import { MediaGalleryModal } from './components/MediaGalleryModal';
 import { HamburgerMenu } from './components/HamburgerMenu';
 import { sounds } from './utils/audio';
 import { useNfcReader, NfcScanMode } from './utils/useNfcReader';
-import { Radio, AlertTriangle, X } from 'lucide-react';
+import { Radio, AlertTriangle, X } from './components/icons';
 
 type Stage = 'home' | 'select' | 'process' | 'steam' | 'emotion' | 'reveal' | 'printer';
 
