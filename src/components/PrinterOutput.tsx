@@ -6,24 +6,37 @@ import { sounds } from '../utils/audio';
 import { DEFAULT_EMOTION_IMAGES, DEFAULT_TEXTS } from '../utils/mediaStorage';
 import { printImage } from '../utils/receiptPrinter';
 
-// 標籤設計稿寬 1016px；日期時間印在左上角，位置、大小對齊原本設計稿上寫死日期的地方
+// 標籤設計稿寬 1016px；日期時間用饅頭黑體大字，置中在最上方虛線以上的留白區（設計稿 0–97px）
 const LABEL_DESIGN_WIDTH = 1016;
-const STAMP_FONT = '500 42px "Noto Sans TC", sans-serif';
+const STAMP_BAND_CENTER_Y = 49;
+const STAMP_FONT_PX = 64;
+const STAMP_GAP_EM = 0.6; // 日期和時間中間的間距
+const stampFont = new FontFace('MantouSansDigits', 'url(/fonts/MantouSans-digits.woff2)'); // 只含數字和符號，3KB
 
 async function stampTimeOnLabel(url: string, text: string): Promise<string> {
   const img = new Image();
   img.src = url;
   await img.decode();
+  await stampFont.load().then((f) => document.fonts.add(f)).catch(() => {});
   const k = img.naturalWidth / LABEL_DESIGN_WIDTH;
   const canvas = document.createElement('canvas');
   canvas.width = img.naturalWidth;
   canvas.height = img.naturalHeight;
   const ctx = canvas.getContext('2d')!;
   ctx.drawImage(img, 0, 0);
-  await document.fonts.load(STAMP_FONT, text).catch(() => {});
-  ctx.font = STAMP_FONT.replace('42px', `${42 * k}px`);
+  const px = STAMP_FONT_PX * k;
+  ctx.font = `${px}px MantouSansDigits, sans-serif`;
   ctx.fillStyle = '#000';
-  ctx.fillText(text, 105 * k, 62 * k);
+  const [date, time = ''] = text.split(' ');
+  const wDate = ctx.measureText(date).width;
+  const gap = px * STAMP_GAP_EM;
+  const total = wDate + gap + ctx.measureText(time).width;
+  const m = ctx.measureText(text);
+  // 用數字實際的高度上下置中，不是用字框
+  const y = STAMP_BAND_CENTER_Y * k + (m.actualBoundingBoxAscent - m.actualBoundingBoxDescent) / 2;
+  const left = (canvas.width - total) / 2;
+  ctx.fillText(date, left, y);
+  ctx.fillText(time, left + wDate + gap, y);
   return canvas.toDataURL('image/png');
 }
 
