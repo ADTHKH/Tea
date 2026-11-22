@@ -84,9 +84,9 @@ export const TeaProcessView: React.FC<Props> = ({
         - Positioned cleanly above the poster image so it does not overlap/press down onto the image
         - Progress bar fill color automatically set to tea's soup color (tea.soupColorHex)
       */}
-      <div className="w-full shrink-0 h-1.5 sm:h-2 bg-stone-200/50 overflow-hidden relative z-30">
+      <div className="w-full shrink-0 h-4 sm:h-5 bg-stone-200/80 overflow-hidden relative z-30">
         <div
-          className="h-full transition-all duration-200 ease-linear shadow-xs"
+          className="h-full rounded-r-full transition-all duration-200 ease-linear shadow-sm"
           style={{
             width: `${progressPercent}%`,
             backgroundColor: tea.soupColorHex
