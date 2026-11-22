@@ -29,6 +29,7 @@ import { MonsterReveal } from './components/MonsterReveal';
 import { PrinterOutput } from './components/PrinterOutput';
 import { MediaGalleryModal } from './components/MediaGalleryModal';
 import { HamburgerMenu } from './components/HamburgerMenu';
+import { SlotMedia } from './components/SlotMedia';
 import { sounds } from './utils/audio';
 import { useNfcReader, NfcScanMode } from './utils/useNfcReader';
 import { Radio, AlertTriangle, X } from './components/icons';
@@ -349,11 +350,9 @@ export default function App() {
     setCurrentStage('home');
   };
 
-  // Background image resolution: full-bleed background for emotion or steam stage
+  // Background image resolution: full-bleed background for steam stage（選情緒頁的 bg-emotion 改成整頁動畫，見 Stage 3）
   const stageBgImage = 
-    currentStage === 'emotion' && settings.customImages['bg-emotion'] 
-      ? settings.customImages['bg-emotion'] 
-      : currentStage === 'steam' && (settings.customImages['bg-steam'] || settings.customImages['bg-main'])
+    currentStage === 'steam' && (settings.customImages['bg-steam'] || settings.customImages['bg-main'])
       ? (settings.customImages['bg-steam'] || settings.customImages['bg-main'])
       : settings.customImages['bg-main'];
 
@@ -463,7 +462,17 @@ export default function App() {
           )}
 
           {/* Stage 3: Six Emotion selection with NFC sensing & pure button graphics */}
-          {currentStage === 'emotion' && (
+          {/* 有設定「選情緒」整頁動畫（bg-emotion）就滿版播動畫、只靠感應選情緒，跟首頁封面一樣；沒設定才用按鈕版 */}
+          {currentStage === 'emotion' && settings.customImages['bg-emotion'] && (
+            <div className="fixed inset-0 z-20 bg-[#F9FAF9] animate-fade-in">
+              <SlotMedia
+                src={settings.customImages['bg-emotion']}
+                alt="選擇情緒"
+                className="w-full h-full object-contain select-none pointer-events-none"
+              />
+            </div>
+          )}
+          {currentStage === 'emotion' && !settings.customImages['bg-emotion'] && (
             <div className="animate-fade-in my-auto">
               <EmotionSelector
                 tea={selectedTea}
