@@ -44,7 +44,8 @@
     "emotion-joy": "/images/小怪獸1.png",
     "emotion-nostalgic": "/images/小怪獸4.png",
     "emotion-vibrant": "/images/小怪獸3.png",
-    "emotion-grounded": "/images/小怪獸6.png"
+    "emotion-grounded": "/images/小怪獸6.png",
+    "emotion-cover": "/images/emotion-cover_1795365002949.gif"
   },
   "emotionNfcChips": {
     "calm": "0278424324",
