@@ -1,5 +1,5 @@
 {
-  "processDurationSeconds": 30,
+  "processDurationSeconds": 15,
   "backgroundColor": "#F9FAF9",
   "cardBackgroundColor": "#FFFFFF",
   "primaryAccentColor": "#2D5B44",
@@ -113,7 +113,7 @@
     "steam-title-gathering": "熱水沖注之間，茶香升騰",
     "steam-title-condensing": "茶湯蒸氣凝結，香氣四溢漸化靈形",
     "steam-title-crystallizing": "心境與茶氣共鳴，即將揭開感官之問...",
-    "steam-desc": "感受茶湯蒸氣為您帶來的感ㄐ。",
+    "steam-desc": "感受茶湯蒸氣為您帶來的感覺。",
     "ticket-prompt": "掃碼將茶靈小怪獸存入手機",
     "reveal-title": "感官共鳴凝華 · 獲得專屬茶靈小怪獸",
     "reveal-congrats": "恭喜喚醒！",
