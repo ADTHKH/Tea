@@ -1,6 +1,15 @@
 {
   "assets": [
     {
+      "id": "asset-1795405880969",
+      "name": "第二個問題-取代按鈕介面",
+      "category": "monster",
+      "targetKey": "emotion-cover",
+      "url": "/images/emotion-cover_1795405875382.gif",
+      "uploadedAt": "2026/11/23",
+      "notes": "自動存入 images/emotion-cover_1795405875382.gif"
+    },
+    {
       "id": "asset-1795365046217",
       "name": "第二個問題-選情緒",
       "category": "monster",
