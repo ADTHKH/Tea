@@ -1,15 +1,6 @@
 {
   "assets": [
     {
-      "id": "asset-1795405993183",
-      "name": "封面",
-      "category": "background",
-      "targetKey": "home-cover",
-      "url": "/images/home-cover_1795405971522.gif",
-      "uploadedAt": "2026/11/23",
-      "notes": "自動存入 images/home-cover_1795405971522.gif"
-    },
-    {
       "id": "asset-1795405880969",
       "name": "第二個問題-取代按鈕介面",
       "category": "monster",
