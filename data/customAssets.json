@@ -1,13 +1,22 @@
 {
   "assets": [
     {
-      "id": "asset-1795405725790",
+      "id": "asset-1795405736455",
+      "name": "第二個問題-取代按鈕介面",
+      "category": "monster",
+      "targetKey": "emotion-cover",
+      "url": "/images/emotion-cover_1795405726546.gif",
+      "uploadedAt": "2026/11/23",
+      "notes": "自動存入 images/emotion-cover_1795405726546.gif"
+    },
+    {
+      "id": "asset-1795405698733",
       "name": "封面",
       "category": "background",
       "targetKey": "home-cover",
-      "url": "/images/home-cover_1795405703560.gif",
+      "url": "/images/home-cover_1795405681013.gif",
       "uploadedAt": "2026/11/23",
-      "notes": "自動存入 images/home-cover_1795405703560.gif"
+      "notes": "自動存入 images/home-cover_1795405681013.gif"
     },
     {
       "id": "asset-1795365046217",
